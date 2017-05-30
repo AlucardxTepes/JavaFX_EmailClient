@@ -26,7 +26,7 @@ public class MainController implements Initializable {
   @FXML
   private TableColumn<EmailMessageBean, String> senderCol;
   @FXML
-  private TableColumn<EmailMessageBean, Integer> sizeCol;
+  private TableColumn<EmailMessageBean, String> sizeCol;
   @FXML
   private Button Button1;
   @FXML
@@ -38,7 +38,7 @@ public class MainController implements Initializable {
   }
 
   final ObservableList<EmailMessageBean> data = FXCollections.observableArrayList(
-          new EmailMessageBean("I will wake up in year 2666", "alucard@castlevania.com", 23500),
+          new EmailMessageBean("I will wake up in year 2666", "alucard@castlevania.com", 239500),
           new EmailMessageBean("Package delivered", "info@fedex.com", 128000 ),
           new EmailMessageBean("SORIAHH", "Roy@pharae.com", 16000),
           new EmailMessageBean("I Fight for my Friends", "Ike@greil.com", 85000),
@@ -56,5 +56,11 @@ public class MainController implements Initializable {
     sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
 
     emailTableView.setItems(data);
+
+    sizeCol.setComparator((o1, o2) -> {
+      Integer int1 = EmailMessageBean.formattedValues.get(o1);
+      Integer int2 = EmailMessageBean.formattedValues.get(o2);
+      return int1.compareTo(int2);
+    });
   }
 }
