@@ -1,5 +1,7 @@
 package com.alucard;
 
+import com.alucard.images.Singleton;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -39,6 +41,7 @@ public class MainController implements Initializable {
   private TreeItem<String> root = new TreeItem<>();
   private SampleData sampleData = new SampleData();
   private MenuItem showDetails = new MenuItem("Show Details");
+  private Singleton singleton;
 
   @FXML
   void Button1Action(ActionEvent event) {
@@ -48,6 +51,7 @@ public class MainController implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
 //    messageRenderer.getEngine().loadContent("<html>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</html>");
+    singleton = Singleton.getInstance();
 
     // Column factories
     subjectCol.setCellValueFactory(new PropertyValueFactory<>("subject"));
@@ -105,6 +109,7 @@ public class MainController implements Initializable {
       EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
       if(message!= null) {
         messageRenderer.getEngine().loadContent(message.getContent());
+        singleton.setEmailMessageBean(message);
       }
     });
   }
