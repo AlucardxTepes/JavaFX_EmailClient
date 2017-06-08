@@ -1,6 +1,7 @@
-package com.alucard;
+package com.alucard.controller;
 
-import com.alucard.images.Singleton;
+import com.alucard.model.EmailMessageBean;
+import com.alucard.model.Singleton;
 
 import java.net.URL;
 import java.util.ResourceBundle;

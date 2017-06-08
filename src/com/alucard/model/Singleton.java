@@ -1,6 +1,4 @@
-package com.alucard.images;
-
-import com.alucard.EmailMessageBean;
+package com.alucard.model;
 
 /**
  * Created by Alucard on 6/6/2017.

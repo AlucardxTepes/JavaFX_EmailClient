@@ -1,4 +1,4 @@
-package com.alucard;
+package com.alucard.model;
 
 import java.util.HashMap;
 import java.util.Map;

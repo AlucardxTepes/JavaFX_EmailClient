@@ -1,26 +1,27 @@
 package com.alucard;
 
+import com.alucard.view.ViewFactory;
+
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class App extends Application {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        Pane pane = FXMLLoader.load(getClass().getResource("MainLayout.fxml"));
+  public static void main(String[] args) {
+    launch(args);
+  }
 
-        Scene scene = new Scene(pane);
-        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-        primaryStage.setScene(scene);
-        primaryStage.show();
+  @Override
+  public void start(Stage primaryStage) throws Exception {
 
-    }
+    ViewFactory viewFactory = new ViewFactory();
+
+    Scene scene = viewFactory.getMainScene();
+    primaryStage.setScene(scene);
+    primaryStage.show();
+
+  }
 
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 }
