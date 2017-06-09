@@ -1,7 +1,7 @@
 package com.alucard.controller;
 
 import com.alucard.model.EmailMessageBean;
-import com.alucard.model.Singleton;
+import com.alucard.model.ModelAccess;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,9 +14,8 @@ import javafx.scene.web.WebView;
 /**
  * Created by Alucard on 06-Jun-17.
  */
-public class EmailDetailsController implements Initializable {
+public class EmailDetailsController extends AbstractController implements Initializable {
 
-  private Singleton singleton;
   private EmailMessageBean emailMessageBean;
 
   @FXML
@@ -28,13 +27,15 @@ public class EmailDetailsController implements Initializable {
   @FXML
   private Label senderLabel;
 
+  public EmailDetailsController(ModelAccess modelAccess) {
+    super(modelAccess);
+  }
 
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     System.out.println("EmailDetailsController initialized");
-    singleton = Singleton.getInstance();
-    emailMessageBean = singleton.getEmailMessageBean();
+    emailMessageBean = getModelAccess().getSelectedMessage();
     subjectLabel.setText("Subject: " + emailMessageBean.getSubject());
     senderLabel.setText("Sender: " + emailMessageBean.getSender());
     webView.getEngine().loadContent(emailMessageBean.getContent());

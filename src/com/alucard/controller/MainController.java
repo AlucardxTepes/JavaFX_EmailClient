@@ -1,8 +1,8 @@
 package com.alucard.controller;
 
 import com.alucard.model.EmailMessageBean;
+import com.alucard.model.ModelAccess;
 import com.alucard.model.SampleData;
-import com.alucard.model.Singleton;
 import com.alucard.view.ViewFactory;
 
 import java.net.URL;
@@ -24,14 +24,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-public class MainController implements Initializable{
+public class MainController extends AbstractController implements Initializable{
 
   @FXML
   private TreeView<String> emailFoldersTreeView;
   private TreeItem<String> root  = new TreeItem<String>();
   private SampleData sampleData = new SampleData();
   private MenuItem showDetails = new MenuItem("show details");
-  private Singleton singleton;
 
   @FXML
   private TableView<EmailMessageBean> emailTableView;
@@ -51,6 +50,10 @@ public class MainController implements Initializable{
   @FXML
   private Button Button1;
 
+  public MainController(ModelAccess modelAccess) {
+    super(modelAccess);
+  }
+
   @FXML
   void Button1Action(ActionEvent event) {
     System.out.println("button1 clicked!!");
@@ -59,8 +62,7 @@ public class MainController implements Initializable{
   @SuppressWarnings("unchecked")
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    ViewFactory viewfactory = new ViewFactory();
-    singleton = Singleton.getInstance();
+    ViewFactory viewfactory = ViewFactory.defaultFactory;
     subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
     senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
     sizeCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("size"));
@@ -104,7 +106,7 @@ public class MainController implements Initializable{
       EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
       if(message != null){
         messageRenderer.getEngine().loadContent(message.getContent());
-        singleton.setEmailMessageBean(message);
+        getModelAccess().setSelectedMessage(message);
       }
     });
     showDetails.setOnAction(e->{
