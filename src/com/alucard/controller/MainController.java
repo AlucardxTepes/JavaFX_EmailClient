@@ -1,8 +1,10 @@
 package com.alucard.controller;
 
+import com.alucard.BoldableRowFactory;
 import com.alucard.model.EmailMessageBean;
 import com.alucard.model.ModelAccess;
 import com.alucard.model.SampleData;
+import com.alucard.model.folder.EmailFolderBean;
 import com.alucard.view.ViewFactory;
 
 import java.net.URL;
@@ -62,6 +64,7 @@ public class MainController extends AbstractController implements Initializable{
   @SuppressWarnings("unchecked")
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    emailTableView.setRowFactory(param -> new BoldableRowFactory<>());
     ViewFactory viewfactory = ViewFactory.defaultFactory;
     subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
     senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
@@ -77,29 +80,31 @@ public class MainController extends AbstractController implements Initializable{
     });
 
 
-
+    EmailFolderBean<String> root = new EmailFolderBean<>("");
     emailFoldersTreeView.setRoot(root);
+    emailFoldersTreeView.setShowRoot(false);
 
-    root.setValue("Alucard@JavaFX.com");
-    root.setGraphic(viewfactory.resolveIcon(root.getValue()));
+    EmailFolderBean<String> alucard = new EmailFolderBean<String>("Alucard@JavaFX.com");
+    root.getChildren().add(alucard);
+    EmailFolderBean<String> inbox = new EmailFolderBean<>("Inbox", "InboxComplete");
+    EmailFolderBean<String> sent = new EmailFolderBean<>("Sent", "SentComplete");
+    sent.getChildren().add(new EmailFolderBean<>("Subfolder1", "Subfolder1Complete"));
+    sent.getChildren().add(new EmailFolderBean<>("Subfolder2", "Subfolder2Complete"));
+    EmailFolderBean<String> spam = new EmailFolderBean<>("Spam", "SpamComplete");
 
-    TreeItem<String> Inbox = new TreeItem<String>("Inbox", viewfactory.resolveIcon("Inbox"));
-    TreeItem<String> Sent = new TreeItem<String>("Sent", viewfactory.resolveIcon("Sent"));
-    TreeItem<String> Subitem1 = new TreeItem<String>("Subitem1", viewfactory.resolveIcon("Subitem1"));
-    TreeItem<String> Subitem2 = new TreeItem<String>("Subitem2",viewfactory.resolveIcon("Subitem2"));
-    Sent.getChildren().addAll(Subitem1, Subitem2);
-    TreeItem<String> Spam = new TreeItem<String>("Spam", viewfactory.resolveIcon("Spam"));
-    TreeItem<String> Trash = new TreeItem<String>("Trash", viewfactory.resolveIcon("Trash"));
+    alucard.getChildren().addAll(inbox,sent,spam);
 
-    root.getChildren().addAll(Inbox, Sent, Spam, Trash);
-    root.setExpanded(true);
+    inbox.getData().addAll(SampleData.inbox);
 
     emailTableView.setContextMenu(new ContextMenu(showDetails));
 
     emailFoldersTreeView.setOnMouseClicked(e ->{
-      TreeItem<String> item = emailFoldersTreeView.getSelectionModel().getSelectedItem();
-      if(item != null){
-        emailTableView.setItems(sampleData.emailFolders.get(item.getValue()));
+      EmailFolderBean<String> item = (EmailFolderBean<String>) emailFoldersTreeView.getSelectionModel().getSelectedItem();
+      if(item != null && !item.isTopElement()){
+        emailTableView.setItems(item.getData());
+        getModelAccess().setSelectedFolder(item);
+        // clear the selected message when changing folders
+        getModelAccess().setSelectedMessage(null);
       }
     });
     emailTableView.setOnMouseClicked(e->{

@@ -1,5 +1,7 @@
 package com.alucard.model;
 
+import com.alucard.model.table.AbstractTableItem;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
 /**
  * Created by Alucard on 26-May-17.
  */
-public class EmailMessageBean {
+public class EmailMessageBean extends AbstractTableItem {
 
   public static Map<String, Integer> formattedValues = new HashMap<>();
 
@@ -17,7 +19,8 @@ public class EmailMessageBean {
   private SimpleStringProperty size;
   private String content;
 
-  public EmailMessageBean(String subject, String sender, int size, String content) {
+  public EmailMessageBean(String subject, String sender, int size, String content, boolean isRead) {
+    super(isRead);
     this.sender = new SimpleStringProperty(sender);
     this.subject = new SimpleStringProperty(subject);
     this.size = new SimpleStringProperty(formatSize(size));
